@@ -20,4 +20,9 @@ abstract class JsonFormFieldInput {
   /// Turns a raw initial value (from the JSON) into the value this input
   /// actually starts with.
   Object? normalizeInitialValue(Object? raw) => raw;
+
+  /// Throws a [FormatException] if [spec] is not valid for this input. Runs
+  /// before the form builds, so bad schemas can be checked without rendering.
+  /// The default accepts everything.
+  void validate(FieldSpec spec) {}
 }

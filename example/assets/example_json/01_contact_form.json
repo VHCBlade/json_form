@@ -1,0 +1,27 @@
+{
+  "fields": [
+    {
+      "key": "fullName",
+      "type": "text",
+      "label": "Full name",
+      "required": true
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "Email address",
+      "required": true
+    },
+    {
+      "key": "phone",
+      "type": "text",
+      "label": "Phone (optional)"
+    },
+    {
+      "key": "message",
+      "type": "text",
+      "label": "Message",
+      "required": true
+    }
+  ]
+}

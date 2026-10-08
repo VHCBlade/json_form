@@ -1,0 +1,85 @@
+{
+  "fields": [
+    {
+      "key": "shipping",
+      "type": "group",
+      "fields": [
+        {
+          "key": "shipName",
+          "type": "text",
+          "label": "Recipient name",
+          "required": true
+        },
+        {
+          "key": "shipStreet",
+          "type": "text",
+          "label": "Street",
+          "required": true
+        },
+        {
+          "key": "shipCity",
+          "type": "text",
+          "label": "City",
+          "required": true
+        },
+        {
+          "key": "shipPostcode",
+          "type": "text",
+          "label": "Postcode"
+        },
+        {
+          "key": "shipCountry",
+          "type": "dropdown",
+          "label": "Country",
+          "required": true,
+          "optionsSource": "countries"
+        }
+      ]
+    },
+    {
+      "key": "billingDiffers",
+      "type": "checkbox",
+      "label": "Billing address is different"
+    },
+    {
+      "key": "billing",
+      "type": "group",
+      "visibleWhen": {
+        "field": "billingDiffers",
+        "equals": true
+      },
+      "fields": [
+        {
+          "key": "billName",
+          "type": "text",
+          "label": "Name on the invoice",
+          "required": true
+        },
+        {
+          "key": "billStreet",
+          "type": "text",
+          "label": "Street",
+          "required": true
+        },
+        {
+          "key": "billCity",
+          "type": "text",
+          "label": "City",
+          "required": true
+        },
+        {
+          "key": "billPostcode",
+          "type": "text",
+          "label": "Postcode"
+        },
+        {
+          "key": "billCountry",
+          "type": "dropdown",
+          "label": "Country",
+          "required": true,
+          "optionsSource": "countries"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "fields": [
+    {
+      "key": "visitReason",
+      "type": "dropdown",
+      "label": "Reason for visiting",
+      "required": true,
+      "options": [
+        "Shopping",
+        "Support",
+        "Returning an item",
+        "Just browsing"
+      ]
+    },
+    {
+      "key": "satisfaction",
+      "type": "integer",
+      "label": "Satisfaction (1 to 5)",
+      "min": 1,
+      "max": 5,
+      "required": true
+    },
+    {
+      "key": "wouldRecommend",
+      "type": "checkbox",
+      "label": "I would recommend you to a friend"
+    },
+    {
+      "key": "comments",
+      "type": "text",
+      "label": "Anything else?"
+    }
+  ]
+}

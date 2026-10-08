@@ -1,0 +1,57 @@
+{
+  "fields": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true
+    },
+    {
+      "key": "severity",
+      "type": "dropdown",
+      "label": "Severity",
+      "required": true,
+      "options": [
+        "Cosmetic",
+        "Minor",
+        "Major",
+        "Crash"
+      ]
+    },
+    {
+      "key": "steps",
+      "type": "text",
+      "label": "Steps to reproduce"
+    },
+    {
+      "key": "reproducible",
+      "type": "checkbox",
+      "label": "I can reproduce it every time"
+    },
+    {
+      "key": "reproRate",
+      "type": "integer",
+      "label": "Roughly how often, as a percentage (1 to 100)",
+      "min": 1,
+      "max": 100,
+      "visibleWhen": {
+        "field": "reproducible",
+        "equals": false
+      }
+    },
+    {
+      "key": "includeLogs",
+      "type": "checkbox",
+      "label": "Include a log excerpt"
+    },
+    {
+      "key": "logExcerpt",
+      "type": "text",
+      "label": "Log excerpt",
+      "visibleWhen": {
+        "field": "includeLogs",
+        "equals": true
+      }
+    }
+  ]
+}

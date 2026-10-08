@@ -1,0 +1,73 @@
+{
+  "fields": [
+    {
+      "key": "enabled",
+      "type": "checkbox",
+      "label": "Enable notifications"
+    },
+    {
+      "key": "channels",
+      "type": "group",
+      "visibleWhen": {
+        "field": "enabled",
+        "equals": true
+      },
+      "fields": [
+        {
+          "key": "emailEnabled",
+          "type": "checkbox",
+          "label": "By email"
+        },
+        {
+          "key": "emailAddress",
+          "type": "text",
+          "label": "Email address",
+          "required": true,
+          "visibleWhen": {
+            "field": "emailEnabled",
+            "equals": true
+          }
+        },
+        {
+          "key": "smsEnabled",
+          "type": "checkbox",
+          "label": "By text message"
+        },
+        {
+          "key": "phoneNumber",
+          "type": "text",
+          "label": "Phone number",
+          "required": true,
+          "visibleWhen": {
+            "field": "smsEnabled",
+            "equals": true
+          }
+        },
+        {
+          "key": "pushEnabled",
+          "type": "checkbox",
+          "label": "Push notifications"
+        },
+        {
+          "key": "dailyDigest",
+          "type": "checkbox",
+          "label": "Combine into one daily digest"
+        },
+        {
+          "key": "quietFrom",
+          "type": "integer",
+          "label": "Quiet hours start (0 to 23)",
+          "min": 0,
+          "max": 23
+        },
+        {
+          "key": "quietTo",
+          "type": "integer",
+          "label": "Quiet hours end (0 to 23)",
+          "min": 0,
+          "max": 23
+        }
+      ]
+    }
+  ]
+}

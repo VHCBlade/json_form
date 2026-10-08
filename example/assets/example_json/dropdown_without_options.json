@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "key": "size",
+      "type": "dropdown",
+      "label": "Size"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "key": "address",
+      "type": "group",
+      "fields": []
+    }
+  ]
+}

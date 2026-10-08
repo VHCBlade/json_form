@@ -1,0 +1,91 @@
+{
+  "fields": [
+    {
+      "key": "fullName",
+      "type": "text",
+      "label": "Full name",
+      "required": true
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "Email address",
+      "required": true
+    },
+    {
+      "key": "role",
+      "type": "dropdown",
+      "label": "Role applied for",
+      "required": true,
+      "options": [
+        {
+          "value": "eng",
+          "label": "Software engineer"
+        },
+        {
+          "value": "des",
+          "label": "Designer"
+        },
+        {
+          "value": "pm",
+          "label": "Product manager"
+        }
+      ]
+    },
+    {
+      "key": "hasExperience",
+      "type": "checkbox",
+      "label": "I have previous experience in this field"
+    },
+    {
+      "key": "experience",
+      "type": "group",
+      "visibleWhen": {
+        "field": "hasExperience",
+        "equals": true
+      },
+      "fields": [
+        {
+          "key": "yearsExperience",
+          "type": "integer",
+          "label": "Years of experience",
+          "min": 0,
+          "max": 60,
+          "required": true
+        },
+        {
+          "key": "currentEmployer",
+          "type": "text",
+          "label": "Current employer"
+        },
+        {
+          "key": "noticeWeeks",
+          "type": "integer",
+          "label": "Notice period in weeks",
+          "min": 0,
+          "max": 26
+        },
+        {
+          "key": "willRelocate",
+          "type": "checkbox",
+          "label": "Willing to relocate"
+        },
+        {
+          "key": "relocationCity",
+          "type": "text",
+          "label": "Preferred city",
+          "visibleWhen": {
+            "field": "willRelocate",
+            "equals": true
+          }
+        }
+      ]
+    },
+    {
+      "key": "agreeToTerms",
+      "type": "checkbox",
+      "label": "I agree to the application terms",
+      "required": true
+    }
+  ]
+}

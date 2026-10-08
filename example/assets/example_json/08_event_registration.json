@@ -1,0 +1,62 @@
+{
+  "fields": [
+    {
+      "key": "attendeeName",
+      "type": "text",
+      "label": "Attendee name",
+      "required": true
+    },
+    {
+      "key": "ticketType",
+      "type": "dropdown",
+      "label": "Ticket",
+      "required": true,
+      "options": [
+        "Standard",
+        "Student",
+        "Supporter"
+      ]
+    },
+    {
+      "key": "guests",
+      "type": "integer",
+      "label": "Additional guests (0 to 5)",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "key": "hasDietaryNeeds",
+      "type": "checkbox",
+      "label": "I have dietary requirements"
+    },
+    {
+      "key": "dietaryNotes",
+      "type": "text",
+      "label": "Dietary requirements",
+      "visibleWhen": {
+        "field": "hasDietaryNeeds",
+        "equals": true
+      }
+    },
+    {
+      "key": "needsAccess",
+      "type": "checkbox",
+      "label": "I need step-free access"
+    },
+    {
+      "key": "accessNotes",
+      "type": "text",
+      "label": "Anything we should know?",
+      "visibleWhen": {
+        "field": "needsAccess",
+        "equals": true
+      }
+    },
+    {
+      "key": "codeOfConduct",
+      "type": "checkbox",
+      "label": "I accept the code of conduct",
+      "required": true
+    }
+  ]
+}

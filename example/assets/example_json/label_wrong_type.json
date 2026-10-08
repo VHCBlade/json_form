@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "key": "age",
+      "type": "text",
+      "label": 42
+    }
+  ]
+}

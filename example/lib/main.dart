@@ -21,13 +21,14 @@ class ExampleApp extends StatelessWidget {
 }
 
 class Preset {
-  const Preset(this.name, this.schema, this.sampleJson);
+  const Preset(this.name, this.schema, [this.sampleJson]);
 
   final String name;
   final Map<String, dynamic> schema;
 
-  /// Raw JSON text, used by "Load sample" to show string input.
-  final String sampleJson;
+  /// Raw JSON text, used by "Load sample" to show string input. Null for
+  /// presets the user adds, which have no sample.
+  final String? sampleJson;
 }
 
 final List<Preset> presets = [
@@ -165,6 +166,29 @@ final List<Preset> presets = [
         '"petInsured": true, "insurer": "Acme Mutual"}',
   ),
   const Preset(
+    'Integers with a range',
+    {
+      'fields': [
+        {
+          'key': 'age',
+          'type': 'integer',
+          'label': 'Age',
+          'min': 18,
+          'max': 120,
+          'required': true,
+        },
+        {
+          'key': 'quantity',
+          'type': 'integer',
+          'label': 'Quantity',
+          'max': 10,
+        },
+        {'key': 'offset', 'type': 'integer', 'label': 'Offset'},
+      ],
+    },
+    '{"age": 200, "quantity": 3, "offset": -5}',
+  ),
+  const Preset(
     'All field types',
     {
       'fields': [
@@ -238,7 +262,11 @@ class _ExamplePageState extends State<ExamplePage> {
   Object? _initial;
   Map<String, dynamic>? _submitted;
 
-  Preset get _preset => presets[_index];
+  /// The built-in presets plus any the user adds this session.
+  late final List<Preset> _presets = [...presets];
+  int _customCount = 0;
+
+  Preset get _preset => _presets[_index];
   Map<String, dynamic>? get _savedForPreset => _saved[_preset.name];
 
   /// JsonForm reads its schema and initial values once, so a new key is how
@@ -254,6 +282,29 @@ class _ExamplePageState extends State<ExamplePage> {
     if (index == null || index == _index) return;
     setState(() {
       _index = index;
+      _initial = null;
+      _generation++;
+      _submitted = null;
+    });
+  }
+
+  /// Asks for a schema and, once it checks out, adds it for this session and
+  /// switches to it.
+  Future<void> _addCustomPreset() async {
+    final preset = await showDialog<Preset>(
+      context: context,
+      builder: (_) => _CustomPresetDialog(
+        inputs: _inputs,
+        initialJson: pretty(_preset.schema),
+        existingNames: {for (final p in _presets) p.name},
+        suggestedName: 'Custom ${_customCount + 1}',
+      ),
+    );
+    if (preset == null || !mounted) return;
+    setState(() {
+      _presets.add(preset);
+      _customCount++;
+      _index = _presets.length - 1;
       _initial = null;
       _generation++;
       _submitted = null;
@@ -280,19 +331,37 @@ class _ExamplePageState extends State<ExamplePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 360),
-                child: DropdownMenu<int>(
-                  expandedInsets: EdgeInsets.zero,
-                  label: const Text('Preset'),
-                  initialSelection: _index,
-                  requestFocusOnTap: false,
-                  onSelected: _selectPreset,
-                  dropdownMenuEntries: [
-                    for (var i = 0; i < presets.length; i++)
-                      DropdownMenuEntry<int>(value: i, label: presets[i].name),
-                  ],
-                ),
+              Row(
+                children: [
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 360),
+                      child: DropdownMenu<int>(
+                        // initialSelection is read once, so rebuild the menu
+                        // when a preset is added.
+                        key: ValueKey(_presets.length),
+                        expandedInsets: EdgeInsets.zero,
+                        label: const Text('Preset'),
+                        initialSelection: _index,
+                        requestFocusOnTap: false,
+                        onSelected: _selectPreset,
+                        dropdownMenuEntries: [
+                          for (var i = 0; i < _presets.length; i++)
+                            DropdownMenuEntry<int>(
+                              value: i,
+                              label: _presets[i].name,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  FilledButton.tonalIcon(
+                    onPressed: _addCustomPreset,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Custom JSON'),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Wrap(
@@ -317,7 +386,9 @@ class _ExamplePageState extends State<ExamplePage> {
                     message: 'Fills the form from the preset sample, '
                         'passed as a JSON string',
                     child: OutlinedButton.icon(
-                      onPressed: () => _reload(_preset.sampleJson),
+                      onPressed: _preset.sampleJson == null
+                          ? null
+                          : () => _reload(_preset.sampleJson),
                       icon: const Icon(Icons.data_object),
                       label: const Text('Load sample'),
                     ),
@@ -448,6 +519,135 @@ class _DataTabs extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Parses [text] and checks that [JsonForm] can build it. Throws a
+/// [FormatException] with a readable message otherwise.
+Map<String, dynamic> parseSchema(String text, List<JsonFormFieldInput> inputs) {
+  final Object? decoded;
+  try {
+    decoded = jsonDecode(text);
+  } on FormatException catch (e) {
+    throw FormatException('Not valid JSON: ${e.message}');
+  }
+  if (decoded is! Map<String, dynamic>) {
+    throw const FormatException('The top level must be a JSON object');
+  }
+  try {
+    JsonForm.validateSchema(decoded, inputs: inputs);
+  } on TypeError catch (e) {
+    throw FormatException('A value in the schema has the wrong type: $e');
+  }
+  return decoded;
+}
+
+/// Collects a name and a schema, and only returns a [Preset] once the schema
+/// has been checked.
+class _CustomPresetDialog extends StatefulWidget {
+  const _CustomPresetDialog({
+    required this.inputs,
+    required this.initialJson,
+    required this.existingNames,
+    required this.suggestedName,
+  });
+
+  final List<JsonFormFieldInput> inputs;
+  final String initialJson;
+  final Set<String> existingNames;
+  final String suggestedName;
+
+  @override
+  State<_CustomPresetDialog> createState() => _CustomPresetDialogState();
+}
+
+class _CustomPresetDialogState extends State<_CustomPresetDialog> {
+  late final TextEditingController _name =
+      TextEditingController(text: widget.suggestedName);
+  late final TextEditingController _json =
+      TextEditingController(text: widget.initialJson);
+
+  String? _nameError;
+  String? _jsonError;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _json.dispose();
+    super.dispose();
+  }
+
+  void _add() {
+    final name = _name.text.trim();
+    String? nameError;
+    if (name.isEmpty) {
+      nameError = 'Give the preset a name';
+    } else if (widget.existingNames.contains(name)) {
+      nameError = 'A preset with this name already exists';
+    }
+
+    String? jsonError;
+    Map<String, dynamic>? schema;
+    try {
+      schema = parseSchema(_json.text, widget.inputs);
+    } on FormatException catch (e) {
+      jsonError = e.message;
+    }
+
+    setState(() {
+      _nameError = nameError;
+      _jsonError = jsonError;
+    });
+    if (nameError == null && schema != null) {
+      Navigator.pop(context, Preset(name, schema));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add a preset from JSON'),
+      content: SizedBox(
+        width: 560,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _name,
+                decoration: InputDecoration(
+                  labelText: 'Preset name',
+                  errorText: _nameError,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _json,
+                minLines: 14,
+                maxLines: 14,
+                style: _mono,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  labelText: 'Schema JSON',
+                  alignLabelWithHint: true,
+                  border: const OutlineInputBorder(),
+                  errorText: _jsonError,
+                  errorMaxLines: 6,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(onPressed: _add, child: const Text('Add preset')),
+      ],
     );
   }
 }

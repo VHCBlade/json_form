@@ -1,0 +1,11 @@
+{
+  "fields": [
+    {
+      "key": "age",
+      "type": "integer",
+      "label": "Age",
+      "min": 50,
+      "max": 10
+    }
+  ]
+}

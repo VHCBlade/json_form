@@ -32,6 +32,9 @@ class JsonFormDropdownFieldInput extends JsonFormFieldInput {
   }
 
   @override
+  void validate(FieldSpec spec) => _sourceFor(spec);
+
+  @override
   Widget build(
     BuildContext context,
     FieldSpec spec, {

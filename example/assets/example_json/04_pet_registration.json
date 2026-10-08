@@ -1,0 +1,90 @@
+{
+  "fields": [
+    {
+      "key": "hasPet",
+      "type": "checkbox",
+      "label": "I have a pet"
+    },
+    {
+      "key": "petDetails",
+      "type": "group",
+      "visibleWhen": {
+        "field": "hasPet",
+        "equals": true
+      },
+      "fields": [
+        {
+          "key": "petName",
+          "type": "text",
+          "label": "Pet name",
+          "required": true
+        },
+        {
+          "key": "species",
+          "type": "dropdown",
+          "label": "Species",
+          "required": true,
+          "options": [
+            {
+              "value": "dog",
+              "label": "Dog"
+            },
+            {
+              "value": "cat",
+              "label": "Cat"
+            },
+            {
+              "value": "other",
+              "label": "Something else"
+            }
+          ]
+        },
+        {
+          "key": "petAge",
+          "type": "integer",
+          "label": "Age in years",
+          "min": 0,
+          "max": 40
+        },
+        {
+          "key": "insured",
+          "type": "checkbox",
+          "label": "The pet is insured"
+        },
+        {
+          "key": "insurer",
+          "type": "text",
+          "label": "Insurance company",
+          "visibleWhen": {
+            "field": "insured",
+            "equals": true
+          }
+        }
+      ]
+    },
+    {
+      "key": "noPet",
+      "type": "group",
+      "visibleWhen": {
+        "field": "hasPet",
+        "equals": false
+      },
+      "fields": [
+        {
+          "key": "considering",
+          "type": "checkbox",
+          "label": "I am thinking about getting one"
+        },
+        {
+          "key": "preferredSpecies",
+          "type": "text",
+          "label": "What kind?",
+          "visibleWhen": {
+            "field": "considering",
+            "equals": true
+          }
+        }
+      ]
+    }
+  ]
+}

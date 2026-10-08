@@ -1,0 +1,19 @@
+{
+  "fields": [
+    {
+      "key": "email",
+      "type": "text",
+      "label": "email"
+    },
+    {
+      "key": "name",
+      "type": "text",
+      "label": "name"
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "email"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "fields": [
+    {
+      "key": "subscribe",
+      "type": "checkbox",
+      "label": "Subscribe to the newsletter"
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "Email address",
+      "required": true,
+      "visibleWhen": {
+        "field": "subscribe",
+        "equals": true
+      }
+    },
+    {
+      "key": "whyNot",
+      "type": "text",
+      "label": "Mind telling us why not?",
+      "visibleWhen": {
+        "field": "subscribe",
+        "equals": false
+      }
+    }
+  ]
+}

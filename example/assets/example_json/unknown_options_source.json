@@ -1,0 +1,10 @@
+{
+  "fields": [
+    {
+      "key": "planet",
+      "type": "dropdown",
+      "label": "Planet",
+      "optionsSource": "planets"
+    }
+  ]
+}

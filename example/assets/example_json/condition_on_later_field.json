@@ -1,0 +1,18 @@
+{
+  "fields": [
+    {
+      "key": "details",
+      "type": "text",
+      "label": "details",
+      "visibleWhen": {
+        "field": "hasDetails",
+        "equals": true
+      }
+    },
+    {
+      "key": "hasDetails",
+      "type": "checkbox",
+      "label": "Has details"
+    }
+  ]
+}

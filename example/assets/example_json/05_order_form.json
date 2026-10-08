@@ -1,0 +1,56 @@
+{
+  "fields": [
+    {
+      "key": "quantity",
+      "type": "integer",
+      "label": "Quantity (1 to 99)",
+      "min": 1,
+      "max": 99,
+      "required": true
+    },
+    {
+      "key": "size",
+      "type": "dropdown",
+      "label": "Size",
+      "required": true,
+      "options": [
+        {
+          "value": "s",
+          "label": "Small"
+        },
+        {
+          "value": "m",
+          "label": "Medium"
+        },
+        {
+          "value": "l",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "key": "giftWrap",
+      "type": "checkbox",
+      "label": "Gift wrap this order"
+    },
+    {
+      "key": "giftMessage",
+      "type": "text",
+      "label": "Gift message",
+      "visibleWhen": {
+        "field": "giftWrap",
+        "equals": true
+      }
+    },
+    {
+      "key": "express",
+      "type": "checkbox",
+      "label": "Express delivery"
+    },
+    {
+      "key": "couponCode",
+      "type": "text",
+      "label": "Coupon code"
+    }
+  ]
+}
