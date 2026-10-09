@@ -82,6 +82,89 @@ final Map<String, Map<String, dynamic>> _valid = {
   'whole-valued double bounds': formSchema([
     {'key': 'n', 'type': 'integer', 'min': 1.0, 'max': 5.0},
   ]),
+  'an object group': formSchema([
+    textSpec('name'),
+    groupSpec(
+      'address',
+      [textSpec('street'), textSpec('city')],
+      output: 'object',
+    ),
+  ]),
+  'a list group with a label, bounds and an add label': formSchema([
+    groupSpec(
+      'pets',
+      [textSpec('name')],
+      output: 'list',
+      label: 'Pets',
+      addLabel: 'Add a pet',
+      minItems: 1,
+      maxItems: 3,
+    ),
+  ]),
+  'whole-valued double list bounds': formSchema([
+    {
+      'key': 'g',
+      'type': 'group',
+      'output': 'list',
+      'minItems': 1.0,
+      'maxItems': 3.0,
+      'fields': [textSpec('a')],
+    },
+  ]),
+  'the same key in different scopes': formSchema([
+    textSpec('name'),
+    groupSpec('owner', [textSpec('name')], output: 'object'),
+    groupSpec('pets', [textSpec('name')], output: 'list'),
+  ]),
+  'a condition reading an enclosing scope from inside a list entry':
+      formSchema([
+    checkboxSpec('gift'),
+    groupSpec(
+      'lines',
+      [
+        textSpec('sku'),
+        checkboxSpec('wrap', visibleWhen: when('gift', true)),
+      ],
+      output: 'list',
+    ),
+  ]),
+  'a condition inside a list entry': formSchema([
+    groupSpec(
+      'pets',
+      [
+        checkboxSpec('vaccinated'),
+        textSpec('vaccineDate', visibleWhen: when('vaccinated', true)),
+      ],
+      output: 'list',
+    ),
+  ]),
+  'a flat group inside an object group': formSchema([
+    groupSpec(
+      'address',
+      [
+        groupSpec('lines', [textSpec('street')]),
+        textSpec('city'),
+      ],
+      output: 'object',
+    ),
+  ]),
+  'objects and lists nested in each other': formSchema([
+    groupSpec(
+      'household',
+      [
+        textSpec('surname'),
+        groupSpec(
+          'members',
+          [
+            textSpec('name'),
+            groupSpec('contact', [textSpec('phone')], output: 'object'),
+          ],
+          output: 'list',
+        ),
+      ],
+      output: 'object',
+    ),
+  ]),
 };
 
 /// Schemas that must be rejected, with the message each should produce.
@@ -180,6 +263,155 @@ final Map<String, ({Map<String, dynamic> schema, String message})> _invalid = {
       ],
     },
     message: 'must be a whole number',
+  ),
+  'an unknown group output': (
+    schema: formSchema([
+      groupSpec('pets', [textSpec('name')], output: 'tree'),
+    ]),
+    message: '"output" of group "pets" must be "flat", "object" or "list": '
+        'tree',
+  ),
+  'minItems above maxItems': (
+    schema: formSchema([
+      groupSpec(
+        'items',
+        [textSpec('sku')],
+        output: 'list',
+        minItems: 5,
+        maxItems: 2,
+      ),
+    ]),
+    message: 'Group "items" has minItems 5 greater than maxItems 2',
+  ),
+  'a negative minItems': (
+    schema: formSchema([
+      groupSpec('items', [textSpec('sku')], output: 'list', minItems: -1),
+    ]),
+    message: '"minItems" of group "items" must be a whole number of at '
+        'least 0: -1',
+  ),
+  'a maxItems of zero': (
+    schema: formSchema([
+      groupSpec('items', [textSpec('sku')], output: 'list', maxItems: 0),
+    ]),
+    message: '"maxItems" of group "items" must be a whole number of at '
+        'least 1: 0',
+  ),
+  'a fractional maxItems': (
+    schema: {
+      'fields': [
+        {
+          'key': 'items',
+          'type': 'group',
+          'output': 'list',
+          'maxItems': 2.5,
+          'fields': [textSpec('sku')],
+        },
+      ],
+    },
+    message: 'must be a whole number of at least 1',
+  ),
+  'an addLabel that is not a string': (
+    schema: {
+      'fields': [
+        {
+          'key': 'items',
+          'type': 'group',
+          'output': 'list',
+          'addLabel': 5,
+          'fields': [textSpec('sku')],
+        },
+      ],
+    },
+    message: '"addLabel" of group "items" must be a string: 5',
+  ),
+  'a group whose fields is not a list': (
+    schema: {
+      'fields': [
+        {'key': 'g', 'type': 'group', 'fields': 'x'},
+      ],
+    },
+    message: '"fields" must be a list',
+  ),
+  'a condition reading into an object group': (
+    schema: formSchema([
+      groupSpec('pet', [checkboxSpec('petInsured')], output: 'object'),
+      textSpec('paperwork', visibleWhen: when('petInsured', true)),
+    ]),
+    message: '"paperwork" is conditional on petInsured, '
+        'which must be declared earlier',
+  ),
+  'a condition reading into a list group': (
+    schema: formSchema([
+      groupSpec('items', [checkboxSpec('flag')], output: 'list'),
+      textSpec('x', visibleWhen: when('flag', true)),
+    ]),
+    message: 'must be declared earlier',
+  ),
+  'a condition on a later field in the same list entry': (
+    schema: formSchema([
+      groupSpec(
+        'pets',
+        [
+          textSpec('b', visibleWhen: when('a', true)),
+          checkboxSpec('a'),
+        ],
+        output: 'list',
+      ),
+    ]),
+    message: '"b" is conditional on a, which must be declared earlier',
+  ),
+  'a duplicate key inside one object group': (
+    schema: formSchema([
+      groupSpec('g', [textSpec('a'), textSpec('a')], output: 'object'),
+    ]),
+    message: 'Duplicate key: "a"',
+  ),
+  'a flat group child clashing with a key beside it': (
+    schema: formSchema([
+      textSpec('a'),
+      groupSpec('g', [textSpec('a')]),
+    ]),
+    message: 'Duplicate key: "a"',
+  ),
+  'a field and an object group sharing a key': (
+    schema: formSchema([
+      textSpec('pet'),
+      groupSpec('pet', [textSpec('name')], output: 'object'),
+    ]),
+    message: 'Duplicate key: "pet"',
+  ),
+  'an empty object group': (
+    schema: formSchema([groupSpec('g', [], output: 'object')]),
+    message: 'Group "g" has no "fields"',
+  ),
+  'an unknown type inside a list group': (
+    schema: formSchema([
+      groupSpec(
+        'g',
+        [
+          {'key': 'x', 'type': 'slider'},
+        ],
+        output: 'list',
+      ),
+    ]),
+    message: 'No input registered for type: slider',
+  ),
+  'a label that is not a string': (
+    schema: {
+      'fields': [
+        {'key': 'a', 'type': 'text', 'label': 42},
+      ],
+    },
+    message: '"label" of "a" must be a string: 42',
+  ),
+  'a required that is not a boolean': (
+    schema: {
+      'fields': [
+        {'key': 'a', 'type': 'text', 'required': 'yes'},
+      ],
+    },
+    message: '"required" of "a" must be true or false: yes',
   ),
 };
 

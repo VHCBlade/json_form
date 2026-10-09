@@ -1,6 +1,6 @@
 name: json_form
 description: "A Flutter package for loading forms from a JSON Schema."
-version: 0.0.1
+version: 0.2.0
 homepage:
 
 environment:

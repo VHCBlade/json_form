@@ -61,12 +61,22 @@ Map<String, dynamic> groupSpec(
   String key,
   List<Map<String, dynamic>> fields, {
   Map<String, dynamic>? visibleWhen,
+  String? output,
+  String? label,
+  int? minItems,
+  int? maxItems,
+  String? addLabel,
 }) =>
     {
       'key': key,
       'type': 'group',
-      'fields': fields,
+      if (output != null) 'output': output,
+      if (label != null) 'label': label,
+      if (minItems != null) 'minItems': minItems,
+      if (maxItems != null) 'maxItems': maxItems,
+      if (addLabel != null) 'addLabel': addLabel,
       if (visibleWhen != null) 'visibleWhen': visibleWhen,
+      'fields': fields,
     };
 
 // ---------------------------------------------------------------------------
@@ -161,3 +171,44 @@ Future<void> blur(WidgetTester tester) async {
 /// The text currently in the text field labelled [key].
 String fieldText(WidgetTester tester, String key) =>
     tester.widget<TextFormField>(textField(key)).controller!.text;
+
+// ---------------------------------------------------------------------------
+// List groups.
+// ---------------------------------------------------------------------------
+
+Future<void> addEntry(WidgetTester tester, [String label = 'Add']) async {
+  await tester.tap(find.text(label));
+  await tester.pump();
+}
+
+Future<void> removeEntry(WidgetTester tester, int index) async {
+  await tester.tap(find.text('Remove').at(index));
+  await tester.pump();
+}
+
+/// The [index]th text field labelled [key], for keys used in several entries.
+Finder textFieldAt(String key, int index) => textField(key).at(index);
+
+Finder checkboxTileAt(String key, int index) => checkboxTile(key).at(index);
+
+Future<void> toggleAt(WidgetTester tester, String key, int index) async {
+  await tester.tap(checkboxTileAt(key, index));
+  await tester.pump();
+}
+
+/// Whether the [index]th button labelled [label] is disabled.
+bool buttonDisabled(WidgetTester tester, String label, {int index = 0}) {
+  final button = find.ancestor(
+    of: find.text(label).at(index),
+    matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+  );
+  return tester.widget<ButtonStyleButton>(button.first).onPressed == null;
+}
+
+/// Makes the test screen tall, so forms with several entries need no
+/// scrolling before something can be tapped.
+void useTallView(WidgetTester tester) {
+  tester.view.devicePixelRatio = 1.0;
+  tester.view.physicalSize = const Size(800, 3000);
+  addTearDown(tester.view.reset);
+}
