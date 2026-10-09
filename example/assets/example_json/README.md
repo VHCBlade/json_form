@@ -24,6 +24,8 @@ example registers a `countries` source. They will be rejected anywhere else.
 | `10_bug_report.json` | Integer clamped to 1-100 shown when a checkbox is unticked |
 | `11_kitchen_sink.json` | Every field type, a nested group, and conditions at every level |
 | `12_support_ticket.json` | Text areas sized with `minLines` and `maxLines`, one shown by a checkbox |
+| `13_household_registration.json` | An object group, and a list group of pets (add, remove, 1 to 5 entries) with a per-entry condition; `name` is used in both scopes |
+| `14_order_line_items.json` | A list group of line items with integer clamping per entry, and a condition on a root checkbox read from inside each entry |
 
 Things worth trying: untick a checkbox that controls a group and tick it again
 (typed values come back); enter 200 in a field with `max: 99` and tab away (it
@@ -48,7 +50,10 @@ Each should be rejected, and the dialog should stay open with the message shown.
 | `invalid/integer_min_above_max.json` | `"age" has min 50 greater than max 10` |
 | `invalid/unknown_options_source.json` | `Unknown options source: planets` |
 | `invalid/dropdown_without_options.json` | `Dropdown "size" needs "options" or "optionsSource"` |
-| `invalid/missing_key.json` | Rejected. The message depends on whether `FieldSpec.fromJson` has been patched to throw a `FormatException` |
+| `invalid/missing_key.json` | `Field needs a string "key": ...` |
 | `invalid/min_lines_above_max_lines.json` | `"notes" has minLines 5 greater than maxLines 3` |
 | `invalid/lines_not_positive.json` | `"minLines" of "notes" must be a positive whole number: 0` |
-| `invalid/label_wrong_type.json` | `A value in the schema has the wrong type: ...` (a cast error, until `fromJson` checks `label`) |
+| `invalid/label_wrong_type.json` | `"label" of "age" must be a string: 42` |
+| `invalid/unknown_group_output.json` | `"output" of group "pets" must be "flat", "object" or "list": tree` |
+| `invalid/min_items_above_max_items.json` | `Group "items" has minItems 5 greater than maxItems 2` |
+| `invalid/condition_into_object_group.json` | `"paperwork" is conditional on petInsured, which must be declared earlier` (a condition cannot read into an object or list group) |

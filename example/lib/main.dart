@@ -225,6 +225,61 @@ final List<Preset> presets = [
         '"log": ""}',
   ),
   const Preset(
+    'Object and list groups',
+    {
+      'fields': [
+        {'key': 'name', 'type': 'text', 'label': 'Your name', 'required': true},
+        {
+          'key': 'address',
+          'type': 'group',
+          'output': 'object',
+          'fields': [
+            {
+              'key': 'street',
+              'type': 'text',
+              'label': 'Street',
+              'required': true,
+            },
+            {'key': 'city', 'type': 'text', 'label': 'City', 'required': true},
+          ],
+        },
+        {
+          'key': 'pets',
+          'type': 'group',
+          'output': 'list',
+          'label': 'Pets',
+          'addLabel': 'Add a pet',
+          'maxItems': 4,
+          'fields': [
+            {
+              'key': 'name',
+              'type': 'text',
+              'label': 'Pet name',
+              'required': true,
+            },
+            {
+              'key': 'species',
+              'type': 'dropdown',
+              'label': 'Species',
+              'options': ['Dog', 'Cat', 'Other'],
+            },
+            {'key': 'vaccinated', 'type': 'checkbox', 'label': 'Vaccinated'},
+            {
+              'key': 'vaccineDate',
+              'type': 'text',
+              'label': 'Date of last vaccine',
+              'visibleWhen': {'field': 'vaccinated', 'equals': true},
+            },
+          ],
+        },
+      ],
+    },
+    '{"name": "Ada", '
+        '"address": {"street": "1 Main St", "city": "Springfield"}, '
+        '"pets": [{"name": "Biscuit", "species": "Dog", "vaccinated": true, '
+        '"vaccineDate": "2026-01-10"}, {"name": "Miso", "species": "Cat"}]}',
+  ),
+  const Preset(
     'All field types',
     {
       'fields': [

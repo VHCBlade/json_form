@@ -1,0 +1,56 @@
+{
+  "fields": [
+    {
+      "key": "customer",
+      "type": "text",
+      "label": "Customer",
+      "required": true
+    },
+    {
+      "key": "giftOrder",
+      "type": "checkbox",
+      "label": "This order is a gift"
+    },
+    {
+      "key": "lines",
+      "type": "group",
+      "output": "list",
+      "label": "Items",
+      "addLabel": "Add an item",
+      "minItems": 1,
+      "maxItems": 10,
+      "fields": [
+        {
+          "key": "sku",
+          "type": "text",
+          "label": "Product code",
+          "required": true
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "label": "Quantity (1 to 99)",
+          "min": 1,
+          "max": 99,
+          "required": true
+        },
+        {
+          "key": "giftWrap",
+          "type": "checkbox",
+          "label": "Gift wrap this item",
+          "visibleWhen": {
+            "field": "giftOrder",
+            "equals": true
+          }
+        }
+      ]
+    },
+    {
+      "key": "notes",
+      "type": "text",
+      "label": "Order notes",
+      "minLines": 2,
+      "maxLines": 6
+    }
+  ]
+}

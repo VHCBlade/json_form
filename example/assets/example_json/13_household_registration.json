@@ -1,0 +1,94 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "type": "text",
+      "label": "Your name",
+      "required": true
+    },
+    {
+      "key": "address",
+      "type": "group",
+      "output": "object",
+      "fields": [
+        {
+          "key": "street",
+          "type": "text",
+          "label": "Street",
+          "required": true
+        },
+        {
+          "key": "city",
+          "type": "text",
+          "label": "City",
+          "required": true
+        },
+        {
+          "key": "postcode",
+          "type": "text",
+          "label": "Postcode"
+        }
+      ]
+    },
+    {
+      "key": "hasPets",
+      "type": "checkbox",
+      "label": "I have pets"
+    },
+    {
+      "key": "pets",
+      "type": "group",
+      "output": "list",
+      "label": "Pets",
+      "addLabel": "Add a pet",
+      "minItems": 1,
+      "maxItems": 5,
+      "visibleWhen": {
+        "field": "hasPets",
+        "equals": true
+      },
+      "fields": [
+        {
+          "key": "name",
+          "type": "text",
+          "label": "Pet name",
+          "required": true
+        },
+        {
+          "key": "species",
+          "type": "dropdown",
+          "label": "Species",
+          "required": true,
+          "options": [
+            {
+              "value": "dog",
+              "label": "Dog"
+            },
+            {
+              "value": "cat",
+              "label": "Cat"
+            },
+            {
+              "value": "other",
+              "label": "Something else"
+            }
+          ]
+        },
+        {
+          "key": "vaccinated",
+          "type": "checkbox",
+          "label": "Vaccinated"
+        },
+        {
+          "key": "vaccineDate",
+          "type": "text",
+          "label": "Date of last vaccine",
+          "visibleWhen": {
+            "field": "vaccinated",
+            "equals": true
+          }
+        }
+      ]
+    }
+  ]
+}
