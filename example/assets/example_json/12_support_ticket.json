@@ -1,0 +1,52 @@
+{
+  "fields": [
+    {
+      "key": "subject",
+      "type": "text",
+      "label": "Subject",
+      "required": true
+    },
+    {
+      "key": "category",
+      "type": "dropdown",
+      "label": "Category",
+      "required": true,
+      "options": [
+        "Billing",
+        "Technical",
+        "Account",
+        "Other"
+      ]
+    },
+    {
+      "key": "description",
+      "type": "text",
+      "label": "Describe the problem",
+      "minLines": 4,
+      "maxLines": 8,
+      "required": true
+    },
+    {
+      "key": "steps",
+      "type": "text",
+      "label": "Steps to reproduce",
+      "minLines": 3
+    },
+    {
+      "key": "attachLogs",
+      "type": "checkbox",
+      "label": "Paste a log excerpt"
+    },
+    {
+      "key": "logs",
+      "type": "text",
+      "label": "Log excerpt",
+      "minLines": 3,
+      "maxLines": 10,
+      "visibleWhen": {
+        "field": "attachLogs",
+        "equals": true
+      }
+    }
+  ]
+}

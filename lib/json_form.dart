@@ -4,6 +4,7 @@ export 'src/condition/condition_parser.dart';
 export 'src/condition/condition.dart';
 export 'src/condition/equals_condition.dart';
 
+export 'src/form/json_schema_parser.dart';
 export 'src/form/main_form.dart';
 
 export 'src/form_type/dropdown_field.dart';

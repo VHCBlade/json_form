@@ -39,6 +39,9 @@ class FieldSpec {
     if (json['type'] is! String) {
       throw FormatException("Type must be a string!");
     }
+    if (json['label'] is! String?) {
+      throw FormatException("Label must be a string!");
+    }
 
     return FieldSpec(
       key: json['key'] as String,

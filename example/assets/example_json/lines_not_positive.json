@@ -1,0 +1,10 @@
+{
+  "fields": [
+    {
+      "key": "notes",
+      "type": "text",
+      "label": "Notes",
+      "minLines": 0
+    }
+  ]
+}

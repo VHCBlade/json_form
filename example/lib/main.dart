@@ -189,6 +189,42 @@ final List<Preset> presets = [
     '{"age": 200, "quantity": 3, "offset": -5}',
   ),
   const Preset(
+    'Multiline text',
+    {
+      'fields': [
+        {
+          'key': 'subject',
+          'type': 'text',
+          'label': 'Subject',
+          'required': true
+        },
+        {
+          'key': 'description',
+          'type': 'text',
+          'label': 'Description',
+          'minLines': 4,
+          'maxLines': 8,
+          'required': true,
+        },
+        {
+          'key': 'notes',
+          'type': 'text',
+          'label': 'Notes (optional)',
+          'maxLines': 3,
+        },
+        {
+          'key': 'log',
+          'type': 'text',
+          'label': 'Log (optional)',
+          'minLines': 2,
+        },
+      ],
+    },
+    '{"subject": "Login fails", '
+        '"description": "Line one\\nLine two\\nLine three", "notes": "", '
+        '"log": ""}',
+  ),
+  const Preset(
     'All field types',
     {
       'fields': [

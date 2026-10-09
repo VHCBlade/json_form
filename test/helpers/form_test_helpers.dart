@@ -134,3 +134,30 @@ Future<void> choose(WidgetTester tester, String label) async {
 /// A [FormatException] whose message contains [part].
 Matcher formatExceptionWith(String part) =>
     isA<FormatException>().having((e) => e.message, 'message', contains(part));
+
+Map<String, dynamic> integerSpec(
+  String key, {
+  int? min,
+  int? max,
+  bool required = false,
+  Map<String, dynamic>? visibleWhen,
+}) =>
+    {
+      'key': key,
+      'type': 'integer',
+      'label': key,
+      if (min != null) 'min': min,
+      if (max != null) 'max': max,
+      if (required) 'required': true,
+      if (visibleWhen != null) 'visibleWhen': visibleWhen,
+    };
+
+/// Moves focus away from whatever has it, as tapping elsewhere would.
+Future<void> blur(WidgetTester tester) async {
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pump();
+}
+
+/// The text currently in the text field labelled [key].
+String fieldText(WidgetTester tester, String key) =>
+    tester.widget<TextFormField>(textField(key)).controller!.text;
