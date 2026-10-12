@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "key": "guest",
+      "type": "text",
+      "label": "Guest name",
+      "required": true
+    },
+    {
+      "key": "birthday",
+      "type": "date",
+      "label": "Date of birth",
+      "min": "1900-01-01",
+      "max": "2026-12-31"
+    },
+    {
+      "key": "stay",
+      "type": "range",
+      "of": "date",
+      "label": "Stay",
+      "fromLabel": "Check in",
+      "toLabel": "Check out",
+      "required": true,
+      "min": "2026-01-01",
+      "max": "2027-12-31"
+    },
+    {
+      "key": "guests",
+      "type": "range",
+      "of": "integer",
+      "label": "Party size",
+      "fromLabel": "Adults",
+      "toLabel": "Total",
+      "min": 1,
+      "max": 12
+    },
+    {
+      "key": "budget",
+      "type": "range",
+      "of": "integer",
+      "label": "Budget per night",
+      "min": 0,
+      "max": 1000
+    }
+  ]
+}

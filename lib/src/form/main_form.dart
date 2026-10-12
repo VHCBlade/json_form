@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../field_spec.dart';
 import '../form_type/checkbox_field.dart';
+import '../form_type/date_field.dart';
 import '../form_type/dropdown_field.dart';
 import '../form_type/form_field.dart';
 import '../form_type/integer_field.dart';
+import '../form_type/range_field.dart';
 import '../form_type/text_field.dart';
 
 class JsonFormController {
@@ -37,6 +39,8 @@ class JsonForm extends StatefulWidget {
     JsonFormDropdownFieldInput(),
     JsonFormCheckboxFieldInput(),
     JsonFormIntegerFieldInput(),
+    JsonFormDateFieldInput(),
+    JsonFormRangeFieldInput(),
   ];
 
   /// Throws a [FormatException] describing the first problem with [schema],

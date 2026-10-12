@@ -26,6 +26,7 @@ example registers a `countries` source. They will be rejected anywhere else.
 | `12_support_ticket.json` | Text areas sized with `minLines` and `maxLines`, one shown by a checkbox |
 | `13_household_registration.json` | An object group, and a list group of pets (add, remove, 1 to 5 entries) with a per-entry condition; `name` is used in both scopes |
 | `14_order_line_items.json` | A list group of line items with integer clamping per entry, and a condition on a root checkbox read from inside each entry |
+| `15_booking.json` | A date, a range of dates with its own labels, and ranges of integers, one open-ended |
 
 Things worth trying: untick a checkbox that controls a group and tick it again
 (typed values come back); enter 200 in a field with `max: 99` and tab away (it
@@ -53,6 +54,11 @@ Each should be rejected, and the dialog should stay open with the message shown.
 | `invalid/missing_key.json` | `Field needs a string "key": ...` |
 | `invalid/min_lines_above_max_lines.json` | `"notes" has minLines 5 greater than maxLines 3` |
 | `invalid/lines_not_positive.json` | `"minLines" of "notes" must be a positive whole number: 0` |
+| `invalid/range_without_of.json` | `Range "stay" needs an "of" naming the type of its two ends` |
+| `invalid/range_unsupported_type.json` | `Range "stay" cannot span "checkbox" fields; use one of: integer, date` |
+| `invalid/range_bounds_invalid.json` | `In range "price": "from" has min 50 greater than max 10` |
+| `invalid/date_min_after_max.json` | `"when" has min 2026-12-31 later than max 2026-01-01` |
+| `invalid/date_bound_not_a_date.json` | `"min" of "when" must be a date like 2026-10-10: next week` |
 | `invalid/label_wrong_type.json` | `"label" of "age" must be a string: 42` |
 | `invalid/unknown_group_output.json` | `"output" of group "pets" must be "flat", "object" or "list": tree` |
 | `invalid/min_items_above_max_items.json` | `Group "items" has minItems 5 greater than maxItems 2` |

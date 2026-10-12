@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+// TODO(haron): Replace with your package's actual name.
 import 'package:json_form/json_form.dart';
 
 void main() => runApp(const ExampleApp());
@@ -278,6 +279,42 @@ final List<Preset> presets = [
         '"address": {"street": "1 Main St", "city": "Springfield"}, '
         '"pets": [{"name": "Biscuit", "species": "Dog", "vaccinated": true, '
         '"vaccineDate": "2026-01-10"}, {"name": "Miso", "species": "Cat"}]}',
+  ),
+  const Preset(
+    'Dates and ranges',
+    {
+      'fields': [
+        {'key': 'name', 'type': 'text', 'label': 'Guest', 'required': true},
+        {
+          'key': 'birthday',
+          'type': 'date',
+          'label': 'Birthday',
+          'max': '2026-12-31',
+        },
+        {
+          'key': 'stay',
+          'type': 'range',
+          'of': 'date',
+          'label': 'Stay',
+          'fromLabel': 'Check in',
+          'toLabel': 'Check out',
+          'required': true,
+          'min': '2026-01-01',
+          'max': '2027-12-31',
+        },
+        {
+          'key': 'budget',
+          'type': 'range',
+          'of': 'integer',
+          'label': 'Budget per night',
+          'min': 0,
+          'max': 1000,
+        },
+      ],
+    },
+    '{"name": "Ada", "birthday": "1990-05-17", '
+        '"stay": {"from": "2026-12-20", "to": "2026-12-27"}, '
+        '"budget": {"from": 80, "to": 250}}',
   ),
   const Preset(
     'All field types',

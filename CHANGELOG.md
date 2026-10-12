@@ -1,3 +1,8 @@
+## 0.2.1
+
+* Added Readme
+* Added 
+
 ## 0.2.0
 
 * Added Object type Grouping to FieldSpec
