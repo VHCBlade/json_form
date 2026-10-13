@@ -212,3 +212,87 @@ void useTallView(WidgetTester tester) {
   tester.view.physicalSize = const Size(800, 3000);
   addTearDown(tester.view.reset);
 }
+
+/// A widget test on a tall screen, so nothing needs scrolling to be tapped.
+void testTall(String name, Future<void> Function(WidgetTester tester) body) {
+  testWidgets(name, (tester) async {
+    useTallView(tester);
+    await body(tester);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Dates and ranges.
+// ---------------------------------------------------------------------------
+
+Map<String, dynamic> dateSpec(
+  String key, {
+  Object? min,
+  Object? max,
+  bool required = false,
+  Map<String, dynamic>? visibleWhen,
+}) =>
+    {
+      'key': key,
+      'type': 'date',
+      'label': key,
+      if (min != null) 'min': min,
+      if (max != null) 'max': max,
+      if (required) 'required': true,
+      if (visibleWhen != null) 'visibleWhen': visibleWhen,
+    };
+
+Map<String, dynamic> rangeSpec(
+  String key,
+  String of, {
+  String? label,
+  String? fromLabel,
+  String? toLabel,
+  Object? min,
+  Object? max,
+  bool required = false,
+  Map<String, dynamic>? visibleWhen,
+}) =>
+    {
+      'key': key,
+      'type': 'range',
+      'of': of,
+      if (label != null) 'label': label,
+      if (fromLabel != null) 'fromLabel': fromLabel,
+      if (toLabel != null) 'toLabel': toLabel,
+      if (min != null) 'min': min,
+      if (max != null) 'max': max,
+      if (required) 'required': true,
+      if (visibleWhen != null) 'visibleWhen': visibleWhen,
+    };
+
+/// The default inputs, with the date input and a range of dates both using
+/// [clock] for what `today` means.
+List<JsonFormFieldInput> clockInputs(DateTime Function() clock) => [
+      ...JsonForm.defaultInputs,
+      JsonFormDateFieldInput(clock: clock),
+      JsonFormRangeFieldInput(
+        inputs: [
+          const JsonFormIntegerFieldInput(),
+          JsonFormDateFieldInput(clock: clock),
+        ],
+      ),
+    ];
+
+/// The helper text under the [index]th field, which is where a date field
+/// shows its resolved bounds.
+String? helperText(WidgetTester tester, [int index = 0]) => tester
+    .widget<InputDecorator>(find.byType(InputDecorator).at(index))
+    .decoration
+    .helperText;
+
+/// Opens the date picker on the field labelled [key], taps [day] of the month
+/// it opens on, and confirms.
+Future<void> pickDay(WidgetTester tester, String key, int day) async {
+  await tester.tap(textField(key));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('$day'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('OK'));
+  await tester.pumpAndSettle();
+}

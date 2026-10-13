@@ -165,6 +165,39 @@ final Map<String, Map<String, dynamic>> _valid = {
       output: 'object',
     ),
   ]),
+  'a date with fixed bounds': formSchema([
+    dateSpec('when', min: '2026-01-01', max: '2026-12-31'),
+  ]),
+  'a date bounded by words': formSchema([
+    dateSpec('when', min: 'today', max: 'thisYear'),
+  ]),
+  'a date bounded by offsets': formSchema([
+    dateSpec('born', min: 'today-120y', max: 'today-18y'),
+    dateSpec('renewal', min: 'today+30d', max: 'today+1y'),
+    dateSpec('next', min: 'thisMonth+1m', max: 'thisMonth+1m'),
+  ]),
+  'a range of integers': formSchema([
+    rangeSpec('price', 'integer', min: 0, max: 1000),
+  ]),
+  'a range of dates with labels': formSchema([
+    rangeSpec(
+      'stay',
+      'date',
+      label: 'Stay',
+      fromLabel: 'Check in',
+      toLabel: 'Check out',
+      required: true,
+      min: 'today',
+      max: 'today+1y',
+    ),
+  ]),
+  'a range inside a list entry': formSchema([
+    groupSpec(
+      'rows',
+      [rangeSpec('price', 'integer')],
+      output: 'list',
+    ),
+  ]),
 };
 
 /// Schemas that must be rejected, with the message each should produce.
@@ -412,6 +445,70 @@ final Map<String, ({Map<String, dynamic> schema, String message})> _invalid = {
       ],
     },
     message: '"required" of "a" must be true or false: yes',
+  ),
+  'a date bound that is not a date': (
+    schema: formSchema([dateSpec('when', min: 'next week')]),
+    message: '"min" of "when" must be a date like 2026-10-10',
+  ),
+  'a date bound that is a number': (
+    schema: formSchema([dateSpec('when', max: 5)]),
+    message: '"max" of "when" must be a date like 2026-10-10',
+  ),
+  'a date that does not exist': (
+    schema: formSchema([dateSpec('when', min: '2026-02-30')]),
+    message: 'must be a date like 2026-10-10',
+  ),
+  'an unknown date word': (
+    schema: formSchema([dateSpec('when', max: 'tomorrow')]),
+    message: 'optionally followed by an offset such as +30d, -1y, +2w or +3m: '
+        'tomorrow',
+  ),
+  'a date offset with no unit': (
+    schema: formSchema([dateSpec('when', max: 'today+30')]),
+    message: 'optionally followed by an offset',
+  ),
+  'a date offset with an unknown unit': (
+    schema: formSchema([dateSpec('when', max: 'today+3q')]),
+    message: 'optionally followed by an offset',
+  ),
+  'a date offset with no word': (
+    schema: formSchema([dateSpec('when', min: '+30d')]),
+    message: 'optionally followed by an offset',
+  ),
+  'a date min after max': (
+    schema: formSchema([
+      dateSpec('when', min: '2026-12-31', max: '2026-01-01'),
+    ]),
+    message: '"when" has min 2026-12-31 later than max 2026-01-01',
+  ),
+  'a range with no "of"': (
+    schema: {
+      'fields': [
+        {'key': 'price', 'type': 'range'},
+      ],
+    },
+    message: 'Range "price" needs an "of" naming the type of its two ends',
+  ),
+  'a range of a type it cannot span': (
+    schema: formSchema([rangeSpec('price', 'checkbox')]),
+    message: 'Range "price" cannot span "checkbox" fields; '
+        'use one of: integer, date',
+  ),
+  'a range whose integer bounds are reversed': (
+    schema: formSchema([rangeSpec('price', 'integer', min: 50, max: 10)]),
+    message: 'In range "price": "from" has min 50 greater than max 10',
+  ),
+  'a range whose date bound is not a date': (
+    schema: formSchema([rangeSpec('stay', 'date', min: 'next week')]),
+    message: 'In range "stay": "min" of "from" must be a date',
+  ),
+  'a range label that is not a string': (
+    schema: {
+      'fields': [
+        {'key': 'stay', 'type': 'range', 'of': 'date', 'fromLabel': 5},
+      ],
+    },
+    message: '"fromLabel" of "stay" must be a string: 5',
   ),
 };
 

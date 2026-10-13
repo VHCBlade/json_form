@@ -1,0 +1,39 @@
+{
+  "fields": [
+    {
+      "key": "dueDate",
+      "type": "date",
+      "label": "Due date",
+      "min": "today"
+    },
+    {
+      "key": "invoiceDate",
+      "type": "date",
+      "label": "Invoice date",
+      "max": "today"
+    },
+    {
+      "key": "reportingDay",
+      "type": "date",
+      "label": "Reporting day",
+      "min": "thisMonth",
+      "max": "thisMonth"
+    },
+    {
+      "key": "fiscalDay",
+      "type": "date",
+      "label": "Fiscal day",
+      "min": "thisYear",
+      "max": "thisYear"
+    },
+    {
+      "key": "window",
+      "type": "range",
+      "of": "date",
+      "label": "Booking window",
+      "fromLabel": "Opens",
+      "toLabel": "Closes",
+      "min": "today"
+    }
+  ]
+}

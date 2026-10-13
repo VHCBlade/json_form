@@ -1,7 +1,8 @@
 ## 0.2.1
 
 * Added Readme
-* Added 
+* Added Date Field
+* Added Range Field
 
 ## 0.2.0
 

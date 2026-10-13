@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-// TODO(haron): Replace with your package's actual name.
 import 'package:json_form/json_form.dart';
 
 void main() => runApp(const ExampleApp());
@@ -315,6 +314,103 @@ final List<Preset> presets = [
     '{"name": "Ada", "birthday": "1990-05-17", '
         '"stay": {"from": "2026-12-20", "to": "2026-12-27"}, '
         '"budget": {"from": 80, "to": 250}}',
+  ),
+  const Preset(
+    'Relative dates',
+    {
+      'fields': [
+        {
+          'key': 'dueDate',
+          'type': 'date',
+          'label': 'Due date (today or later)',
+          'min': 'today',
+        },
+        {
+          'key': 'invoiceDate',
+          'type': 'date',
+          'label': 'Invoice date (today or earlier)',
+          'max': 'today',
+        },
+        {
+          'key': 'reportingMonth',
+          'type': 'date',
+          'label': 'Reporting day (this month only)',
+          'min': 'thisMonth',
+          'max': 'thisMonth',
+        },
+        {
+          'key': 'fiscalDay',
+          'type': 'date',
+          'label': 'Fiscal day (this year only)',
+          'min': 'thisYear',
+          'max': 'thisYear',
+        },
+        {
+          'key': 'window',
+          'type': 'range',
+          'of': 'date',
+          'label': 'Booking window (today or later)',
+          'fromLabel': 'Opens',
+          'toLabel': 'Closes',
+          'min': 'today',
+        },
+      ],
+    },
+    // Every date here is out of range on purpose, so loading the sample
+    // shows each one being clamped.
+    '{"dueDate": "2000-01-01", "invoiceDate": "2999-01-01", '
+        '"reportingMonth": "2000-01-01", "fiscalDay": "2999-12-31", '
+        '"window": {"from": "2000-01-01", "to": "2000-02-01"}}',
+  ),
+  const Preset(
+    'Date offsets',
+    {
+      'fields': [
+        {
+          'key': 'birthDate',
+          'type': 'date',
+          'label': 'Date of birth (18 to 120 years ago)',
+          'min': 'today-120y',
+          'max': 'today-18y',
+        },
+        {
+          'key': 'renewal',
+          'type': 'date',
+          'label': 'Renewal (30 days to a year away)',
+          'min': 'today+30d',
+          'max': 'today+1y',
+        },
+        {
+          'key': 'nextMonthDay',
+          'type': 'date',
+          'label': 'A day next month',
+          'min': 'thisMonth+1m',
+          'max': 'thisMonth+1m',
+        },
+        {
+          'key': 'lastYearDay',
+          'type': 'date',
+          'label': 'A day last year',
+          'min': 'thisYear-1y',
+          'max': 'thisYear-1y',
+        },
+        {
+          'key': 'trial',
+          'type': 'range',
+          'of': 'date',
+          'label': 'Trial (up to 30 days from today)',
+          'fromLabel': 'Starts',
+          'toLabel': 'Ends',
+          'min': 'today',
+          'max': 'today+30d',
+        },
+      ],
+    },
+    // Every date here is out of range on purpose, so loading the sample
+    // shows each one being clamped.
+    '{"birthDate": "2999-01-01", "renewal": "2000-01-01", '
+        '"nextMonthDay": "2000-01-01", "lastYearDay": "2999-01-01", '
+        '"trial": {"from": "2000-01-01", "to": "2999-01-01"}}',
   ),
   const Preset(
     'All field types',
