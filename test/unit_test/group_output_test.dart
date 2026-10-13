@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// TODO(haron): Replace with your package's actual name.
 import 'package:json_form/json_form.dart';
 
 import '../helpers/form_test_helpers.dart';
